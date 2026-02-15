@@ -14,6 +14,6 @@ public class AttackComponent : IAttackComponent
 
     public void MakeDamage(Character attackTarget)
     {
-        attackTarget.HealthComponent.SetDemage((int)Damage);
+        character.HealthComponent.SetDemage((int)Damage);
     }
 }

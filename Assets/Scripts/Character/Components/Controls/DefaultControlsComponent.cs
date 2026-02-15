@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DefaultControlsComponent : IControlsComponent
 {
@@ -15,7 +16,22 @@ public class DefaultControlsComponent : IControlsComponent
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 moveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized;
 
+        if (character.CharacterTarget == null)
+        {
+            character.MovementComponent.Rotate(moveDirection);
+        }
+        else
+        {
+            Vector3 rotationDirection = character.CharacterTarget.transform.position - character.transform.position;
+            character.MovementComponent.Rotate(rotationDirection);
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                Debug.Log("Attacking target: " + character.CharacterTarget.name);
+                character.CharacterTarget.AttackComponent.MakeDamage(character.CharacterTarget);
+            }
+        }
+
         character.MovementComponent.Move(moveDirection);
-        character.MovementComponent.Rotate(moveDirection);
     }
 }

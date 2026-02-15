@@ -3,17 +3,17 @@ using UnityEngine;
 public class EnemyCharacter : Character
 {
     [SerializeField]
-    private Character characterTarget;
-
-    public override Character Target => characterTarget;
-
-    [SerializeField]
     private AiState aiState;
+
+    public override Character CharacterTarget => GameManager.Instance.CharactorFactory.Player;
+
 
     public override void Initialize()
     {
+        Debug.Log("Initializing EnemyCharacter: " + name);
         base.Initialize();
         HealthComponent = new HealthComponent();
+        HealthComponent.Initialize(this);
 
         ControlsComponent = new DefaultAiControlsComponent();
         ControlsComponent.Initialize(this);
@@ -24,7 +24,7 @@ public class EnemyCharacter : Character
         if (HealthComponent.Health <= 0)
             return;
 
-        float distance = Vector3.Distance(characterTarget.transform.position, transform.position);
+        float distance = Vector3.Distance(CharacterTarget.transform.position, transform.position);
         if (distance <= AttackComponent.AttackRange)
         {
             aiState = AiState.Attack;
@@ -40,7 +40,7 @@ public class EnemyCharacter : Character
                 ControlsComponent.OnUpdate();
                 return;
             case AiState.Attack:
-                AttackComponent.MakeDamage(characterTarget);
+                AttackComponent.MakeDamage(CharacterTarget);
                 return;
         }
     }
